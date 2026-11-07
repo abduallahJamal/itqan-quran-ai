@@ -1,0 +1,20 @@
+# Dependencies & caches
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local SQLite database (auto-generated on startup / Docker build via build_quran_db.py)
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# Local AI model weights caches
+models_cache/
+models_onnx/
+
+# Environment & secrets
+.env
+.env.*
+.DS_Store

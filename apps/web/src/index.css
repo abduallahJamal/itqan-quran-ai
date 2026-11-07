@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: "IBM Plex Sans Arabic", system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-quran {
+  font-family: "Scheherazade New", "Amiri Quran", "Amiri", "Traditional Arabic", serif;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+.mushaf-parchment {
+  background: radial-gradient(circle at 50% 20%, #fffdf8 0%, #faf5e8 70%, #f3ebd7 100%);
+  box-shadow:
+    0 12px 40px -12px rgba(28, 25, 23, 0.14),
+    inset 0 0 0 2px #e5d7b8,
+    inset 0 0 0 6px #faf5e8,
+    inset 0 0 0 7.5px #c9b27c;
+}
+
+.mushaf-parchment-dark {
+  background: radial-gradient(circle at 50% 20%, #1c2421 0%, #141a18 85%, #0f1412 100%);
+  box-shadow:
+    0 12px 40px -12px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 2px #2d4239,
+    inset 0 0 0 6px #141a18,
+    inset 0 0 0 7.5px #846d3b;
+}
+
+@keyframes pulse-cursor {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(5, 150, 105, 0.08);
+  }
+}
+
+.cursor-word-active {
+  animation: pulse-cursor 1.8s infinite;
+}
+
+@keyframes shake-mistake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+}
+
+.mistake-flash {
+  animation: shake-mistake 0.32s ease-in-out 2;
+}

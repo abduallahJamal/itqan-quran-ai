@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  ai-worker:
+    build:
+      context: ./services/ai-worker
+      dockerfile: Dockerfile.gpu
+    container_name: itqan-gpu-ai-worker
+    environment:
+      - WHISPER_QURAN_MODEL=wasimlhr/whisper-quran-v1
+      - WHISPER_COMPUTE_TYPE=float16
+      - QPS_ONNX_PATH=/models/muaalem_tajweed_int8_fastattn.onnx
+      - AI_DEVICE=cuda
+    volumes:
+      - ./models_cache:/root/.cache/huggingface
+      - ./models_onnx:/models
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  backend:
+    image: python:3.12-slim
+    container_name: itqan-core-backend
+    working_dir: /workspace/services/backend
+    environment:
+      - AI_WORKER_URL=http://ai-worker:8090
+    volumes:
+      - ./:/workspace
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ai-worker
+    restart: unless-stopped
