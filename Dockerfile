@@ -12,6 +12,7 @@ RUN npm install --no-audit --no-fund && npm run build
 # 2. تشغيل الخادم المركزي وتوليد قاعدة البيانات القرآنية إن لم تكن مرفوعة
 FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1 \
+    HOME=/tmp \
     PORT=7860
 
 WORKDIR /app
@@ -21,8 +22,8 @@ RUN pip install --no-cache-dir -r ./services/backend/requirements.txt
 COPY services/backend ./services/backend
 COPY --from=web-builder /build/apps/web/public_bundle ./apps/web/public_bundle
 
-# بناء قاعدة بيانات المصحف الكاملة (6,236 آية + التجويد + المتشابهات) أثناء بناء الصورة
-RUN mkdir -p /app/data && python3 /app/services/backend/scripts/build_quran_db.py && chmod -R 777 /app/data
+# بناء قاعدة بيانات المصحف الكاملة ومنح صلاحيات الكتابة للمستخدم غير الجذري (مثل Hugging Face Spaces uid=1000)
+RUN mkdir -p /app/data && python3 /app/services/backend/scripts/build_quran_db.py && chmod -R 777 /app
 
 WORKDIR /app/services/backend
 EXPOSE 7860
